@@ -2,6 +2,19 @@ const express = require("express");
 const app = express();
 const {adminAuth, userAuth} = require("./middlewares/auth")
 
+// ADD TRY CATCH TO HANDLE ERRORS---------------->
+
+app.get('/getUserData', (req,res)=>{
+    try{
+    throw new Error('ghsdghdsg');
+    res.send('User Data Sent');
+    } catch(err){
+        res.status(500).send('Some error occured contact customer support');
+    }
+})
+
+// HANDLE ERROR USING (err,req,res.next)--------------->
+
 // app.get('/getUserData', (req,res)=>{
 //     throw new Error('ghsdghdsg')
 //     res.send('User Data Sent');
@@ -15,17 +28,6 @@ const {adminAuth, userAuth} = require("./middlewares/auth")
 
 // })
 
-/// OR ADD TRY CATCH TO HANDLE ERRORS---------------->
-
-
-app.get('/getUserData', (req,res)=>{
-    try{
-    throw new Error('ghsdghdsg');
-    res.send('User Data Sent');
-    } catch(err){
-        res.status(500).send('Some error occured contact customer support');
-    }
-})
 
 // Handle Auth Middleware for all GET, POST, ... requests
 // app.use('/admin',adminAuth)
