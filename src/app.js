@@ -2,22 +2,47 @@ const express = require("express");
 const app = express();
 const {adminAuth, userAuth} = require("./middlewares/auth")
 
-// Handle Auth Middleware for all GET, POST, ... requests
-app.use('/admin',adminAuth)
-// app.use('/user', userAuth)
+// app.get('/getUserData', (req,res)=>{
+//     throw new Error('ghsdghdsg')
+//     res.send('User Data Sent');
+// })
 
-app.get('/user', userAuth, (req,res)=>{
+// app.use('/', (err,req,res,next)=>{
+//     if(err){
+//         // Log your error
+//         res.status(500).send('Something went wrong');
+//     }
+
+// })
+
+/// OR ADD TRY CATCH TO HANDLE ERRORS---------------->
+
+
+app.get('/getUserData', (req,res)=>{
+    try{
+    throw new Error('ghsdghdsg');
     res.send('User Data Sent');
+    } catch(err){
+        res.status(500).send('Some error occured contact customer support');
+    }
 })
-app.get('/admin/getAllData', (req,res)=> {
-        res.send('All Data Sent');
 
-})
+// Handle Auth Middleware for all GET, POST, ... requests
+// app.use('/admin',adminAuth)
+// // app.use('/user', userAuth)
 
-app.get('/admin/deleteUser', (req,res)=> {
-    res.send('Deleted a user');
+// app.get('/user', userAuth, (req,res)=>{
+//     res.send('User Data Sent');
+// })
+// app.get('/admin/getAllData', (req,res)=> {
+//         res.send('All Data Sent');
 
-})
+// })
+
+// app.get('/admin/deleteUser', (req,res)=> {
+//     res.send('Deleted a user');
+
+// })
 
 
 // Independant route handling
