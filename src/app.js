@@ -5,14 +5,17 @@ const { adminAuth, userAuth } = require("./middlewares/auth");
 
 const User = require('./models/user')
 
+app.use(express.json()); // we can't read req?.body directly as it retuns us json and in order to read that json we use express.json() middleware
 app.post('/signup', async (req,res)=> {
-    // Creating a new instance of the User model
-    const user = new User({
-        firstName: 'Manveer',
-        lastName: 'Kaur',
-        emailId: 'manveer@gmail.com',
-        password: 'manveer@123'
-    })
+    const user = new User(req?.body);
+
+//     // Creating a new instance of the User model
+//     const user = new User({
+//         firstName: 'Manveer',
+//         lastName: 'Kaur',
+//         emailId: 'manveer@gmail.com',
+//         password: 'manveer@123'
+//     })
    
     try{
         await user.save();
