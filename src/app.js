@@ -1,17 +1,53 @@
 const express = require("express");
+const connectDB = require("./config/database");
 const app = express();
-const {adminAuth, userAuth} = require("./middlewares/auth")
+const { adminAuth, userAuth } = require("./middlewares/auth");
+
+const User = require('./models/user')
+
+app.post('/signup', async (req,res)=> {
+    // Creating a new instance of the User model
+    const user = new User({
+        firstName: 'Manveer',
+        lastName: 'Kaur',
+        emailId: 'manveer@gmail.com',
+        password: 'manveer@123'
+    })
+   
+    try{
+        await user.save();
+        res.send('User added successfully')
+    } catch(err){
+        res.status(400).send('Error saving the user', err?.message)
+    }
+
+})
+
+
+
+connectDB()
+  .then(() => {
+    console.log("Database connection established...");
+
+    app.listen(3030, () => {
+      console.log("Server successfully listening on port 3030");
+    });
+  })
+  .catch((err) => {
+    console.log("**err****", err);
+    console.log("Database cannot be connected!!");
+  });
 
 // ADD TRY CATCH TO HANDLE ERRORS---------------->
 
-app.get('/getUserData', (req,res)=>{
-    try{
-    throw new Error('ghsdghdsg');
-    res.send('User Data Sent');
-    } catch(err){
-        res.status(500).send('Some error occured contact customer support');
-    }
-})
+// app.get('/getUserData', (req,res)=>{
+//     try{
+//     throw new Error('ghsdghdsg');
+//     res.send('User Data Sent');
+//     } catch(err){
+//         res.status(500).send('Some error occured contact customer support');
+//     }
+// })
 
 // HANDLE ERROR USING (err,req,res.next)--------------->
 
@@ -27,7 +63,6 @@ app.get('/getUserData', (req,res)=>{
 //     }
 
 // })
-
 
 // Handle Auth Middleware for all GET, POST, ... requests
 // app.use('/admin',adminAuth)
@@ -45,7 +80,6 @@ app.get('/getUserData', (req,res)=>{
 //     res.send('Deleted a user');
 
 // })
-
 
 // Independant route handling
 // app.get("/user", (req, res, next) => {
@@ -101,7 +135,6 @@ app.get('/getUserData', (req,res)=>{
 
 // it'll give response for dragonfly or dragonnnnnnnflag but not given any response for dragonflyjj
 
-
 // app.get(/.fly$/, (req, res) => {
 //   res.send({ firstName: "Gursimran", lastName: "Kaur" });
 // });
@@ -123,6 +156,3 @@ app.get('/getUserData', (req,res)=>{
 // app.use("/test", (req, res) => {
 //   res.send("Hello from the server");
 // });
-app.listen(3030, () => {
-  console.log("Server successfully listening on port 3030");
-});
