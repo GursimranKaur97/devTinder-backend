@@ -20,7 +20,7 @@ app.post("/signup", async (req, res) => {
     await user.save();
     res.send("User added successfully");
   } catch (err) {
-    res.status(400).send("Error saving the user", err?.message);
+    res.status(400).send("Error saving the user" + err?.message);
   }
 });
 
@@ -44,7 +44,7 @@ app.get("/user", async (req, res) => {
     //   res.send(users);
     // }
   } catch (err) {
-    res.status(400).send("Something went wrong");
+    res.status(400).send("Something went wrong" + err?.message);
   }
 });
 // Feed API - GET /feed - get all the users from the database
@@ -57,7 +57,7 @@ app.get("/feed", async(req, res) => {
       res.send(users);
     }
   } catch (err) {
-    res.status(400).send("Something went wrong");
+    res.status(400).send("Something went wrong"+ err?.message);
   }
 });
 
@@ -68,7 +68,7 @@ app.delete('/user', async(req,res)=>{
         const user = await User.findByIdAndDelete(userId);
         res.send('User deleted successfully')
     } catch(err){
-        res.status(400).send('Something went wrong')
+        res.status(400).send('Something went wrong' + err?.message)
     }
 })
 
@@ -111,8 +111,7 @@ connectDB()
     });
   })
   .catch((err) => {
-    console.log("**err****", err);
-    console.log("Database cannot be connected!!");
+    console.log("Database cannot be connected!!" + err);
   });
 
 // ADD TRY CATCH TO HANDLE ERRORS---------------->
