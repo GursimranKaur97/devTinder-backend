@@ -3,10 +3,11 @@ const connectDB = require("./config/database");
 const app = express();
 // const { adminAuth, userAuth } = require("./middlewares/auth");
 const User = require("./models/user");
+const { validateSignupData } = require("./utils/validation");
+const bcrypt = require('bcrypt');
 
 app.use(express.json()); // we can't read req?.body directly as it retuns us json and in order to read that json we use express.json() middleware
 app.post("/signup", async (req, res) => {
-  const user = new User(req?.body);
 
   //     // Creating a new instance of the User model
   //     const user = new User({
@@ -17,12 +18,59 @@ app.post("/signup", async (req, res) => {
   //     })
 
   try {
+    // Validation of data
+    validateSignupData(req);
+    const { firstName, lastName, emailId, password } = req?.body;
+    
+    // Encypt the password
+    const passwordHash = await bcrypt.hash(password, 10);
+    console.log('*****passwordHash****', passwordHash)
+
+    const user =  new User({
+        firstName,
+        lastName,
+        emailId,
+        password: passwordHash
+    })
+    
     await user.save();
     res.send("User added successfully");
   } catch (err) {
-    res.status(400).send("Error saving the user" + err?.message);
+    res.status(400).send("ERROR::" + err?.message);
   }
 });
+
+app.post("/login", async(req,res)=>{
+    try{
+        const { emailId, password } = req.body;
+
+        if(!emailId || !password){
+            throw new Error("Please provide Email and password")
+        }
+
+        const user = await User.findOne({emailId: emailId});
+
+        if(!user){
+            throw new Error("Invalid Credentials")
+        }
+
+
+        // if(!validator.isEmail(emailId) || !validator.isStrongPassword(password)){
+        //     res.status(400).send('ERROR : ' + err.message);
+        // }
+
+        const isPasswordValid = await bcrypt.compare(password, user?.password);
+        if(isPasswordValid){
+            res.send('Login Successful!!');
+        } else {
+            throw new Error('Invalid Credentials');
+        }
+
+
+    } catch(err){
+        res.status(400).send('ERROR : ' + err.message);
+    }
+})
 
 // GET user by email
 app.get("/user", async (req, res) => {
