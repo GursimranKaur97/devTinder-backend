@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         minLength: 4,
         maxLength: 50
+        // index: true // creating index
     },
     lastName: {
         type: String
@@ -16,7 +17,7 @@ const userSchema = new mongoose.Schema({
     emailId: {
         type: String,
         required: true,
-        unique: true,
+        unique: true, // If we're adding unique as true then by default it creates index also for emailid
         lowercse: true,
         trim: true,
         validate(value){
@@ -40,11 +41,11 @@ const userSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        validate(value){
-            if(!["male","female","others"].includes(value)){
-             throw new Error("Gender data is not valid!");
-            }
-        }
+        enum: {
+            values:["male","female","other"],
+            message: `{VALUE} is not a valid gender type`
+        }, 
+
     },
     photoUrl: {
         type: String,
@@ -66,6 +67,8 @@ const userSchema = new mongoose.Schema({
 {
     timestamps: true
 })
+
+userSchema.index({firstName: 1, lastName: 1}); // Compound Index
 
 userSchema.methods.getJWT = async function(){
     const user =  this;
