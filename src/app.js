@@ -2,7 +2,9 @@ const express = require("express");
 const connectDB = require("./config/database");
 const app = express();
 const cookieParser = require('cookie-parser');
+const cors = require('cors'); // to allow cross origin requests
 
+app.use(cors());
 app.use(express.json()); // we can't read req?.body directly as it retuns us json and in order to read that json we use express.json() middleware
 app.use(cookieParser()); // read cookies(if we'll not include this cookie will come as undefined even in case it exists)
 
