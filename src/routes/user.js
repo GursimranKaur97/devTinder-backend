@@ -10,6 +10,7 @@ const USER_SAFE_DATA = [
   "gender",
   "about",
   "skills",
+  "photoUrl"
 ];
 
 // Get all the pending connection request for the loggedInUser
